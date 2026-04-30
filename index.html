@@ -1,47 +1,110 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="UTF-8">
   <title>Ногооны дэлгүүр</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    img {
+      width: 100%;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    button {
+      margin-top: 8px;
+      padding: 6px 10px;
+      border: none;
+      background: green;
+      color: white;
+      border-radius: 5px;
+    }
+
+    #cart {
+      margin-top: 20px;
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  </style>
+
 </head>
 <body>
 
-<h1>🥕 Манай бүтээгдэхүүн</h1>
+<h1>🥬 Миний ногооны дэлгүүр</h1>
 
-<div id="products"></div>
+<div class="container" id="products"></div>
 
-<h2>📦 Захиалга</h2>
-
-<input id="name" placeholder="Нэр">
-<input id="phone" placeholder="Утас">
-<button onclick="order()">Захиалах</button>
+<div id="cart">
+  <h2>🛒 Сагс</h2>
+  <ul id="cartList"></ul>
+</div>
 
 <script>
-fetch("https://tamiraagiin-nogoonii-languu.onrender.com/products")
+
+const images = {
+  "Төмс": "https://upload.wikimedia.org/wikipedia/commons/6/60/Potato.jpg",
+  "Лууван": "https://upload.wikimedia.org/wikipedia/commons/7/7e/Carrot.jpg"
+};
+
+const cart = [];
+
+fetch("https://tamiraagiin-nogoonii-languu.onrender.com")
   .then(res => res.json())
   .then(data => {
-    const div = document.getElementById("products");
+    const container = document.getElementById("products");
 
     data.forEach(item => {
-      const p = document.createElement("p");
-      p.innerText = item.name + " - " + item.price + "₮";
-      div.appendChild(p);
+      const div = document.createElement("div");
+      div.className = "card";
+
+      div.innerHTML = `
+        <img src="${images[item.name] || 'https://via.placeholder.com/150'}">
+        <h3>${item.name}</h3>
+        <p>${item.price}₮</p>
+        <button onclick="addToCart('${item.name}', ${item.price})">Захиалах</button>
+      `;
+
+      container.appendChild(div);
     });
   });
 
-function order() {
-  fetch("https://tamiraagiin-nogoonii-languu.onrender.com/order", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      name: document.getElementById("name").value,
-      phone: document.getElementById("phone").value
-    })
-  })
-  .then(res => res.json())
-  .then(data => alert("Захиалга амжилттай 🚀"));
+function addToCart(name, price) {
+  cart.push({name, price});
+
+  const list = document.getElementById("cartList");
+  const li = document.createElement("li");
+  li.textContent = name + " - " + price + "₮";
+
+  list.appendChild(li);
 }
+
 </script>
 
 </body>
