@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Ногооны дэлгүүр</title>
+</head>
+<body>
+
+<h1>🥕 Манай бүтээгдэхүүн</h1>
+
+<div id="products"></div>
+
+<h2>📦 Захиалга</h2>
+
+<input id="name" placeholder="Нэр">
+<input id="phone" placeholder="Утас">
+<button onclick="order()">Захиалах</button>
+
+<script>
+fetch("https://tamiraagiin-nogoonii-languu.onrender.com/products")
+  .then(res => res.json())
+  .then(data => {
+    const div = document.getElementById("products");
+
+    data.forEach(item => {
+      const p = document.createElement("p");
+      p.innerText = item.name + " - " + item.price + "₮";
+      div.appendChild(p);
+    });
+  });
+
+function order() {
+  fetch("https://tamiraagiin-nogoonii-languu.onrender.com/order", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      name: document.getElementById("name").value,
+      phone: document.getElementById("phone").value
+    })
+  })
+  .then(res => res.json())
+  .then(data => alert("Захиалга амжилттай 🚀"));
+}
+</script>
+
+</body>
+</html>
