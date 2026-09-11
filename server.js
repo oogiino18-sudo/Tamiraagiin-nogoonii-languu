@@ -6,10 +6,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Нүүр хуудас
 app.get("/", (req, res) => {
-  res.send("API ажиллаж байна 🚀");
+  res.sendFile(__dirname + "/index.html");
 });
 
+// Бүтээгдэхүүн
 app.get("/products", (req, res) => {
   res.json([
     { name: "Төмс", price: 900 },
@@ -17,24 +19,34 @@ app.get("/products", (req, res) => {
   ]);
 });
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(PORT, () => {
-  console.log("Server running on port " + PORT);
-});
-app.use(express.json());
-
+// Захиалга
 let orders = [];
 
 app.post("/order", (req, res) => {
-  const order = req.body;
+  const order = {
+    id: orders.length + 1,
+    ...req.body,
+    createdAt: new Date().toISOString()
+  };
+
   orders.push(order);
 
   console.log("Шинэ захиалга:", order);
 
-  res.json({ message: "OK" });
+  res.json({
+    success: true,
+    message: "Захиалга амжилттай хүлээн авлаа",
+    order: order
+  });
 });
 
+// Захиалгууд
 app.get("/orders", (req, res) => {
   res.json(orders);
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
 });
