@@ -63,10 +63,37 @@
 
 <div id="cart">
   <h2>🛒 Сагс</h2>
-  <ul id="cartList"></ul>
-</div>
+  <ul id="cartList"></ul> <button onclick="showOrderForm()">Захиалга өгөх</button>
 
+<div id="orderForm" style="display:none;">
+  <h3>Захиалгын мэдээлэл</h3>
+
+  <input id="customerName" type="text" placeholder="Нэр"><br><br>
+
+  <input id="customerPhone" type="tel" placeholder="Утасны дугаар"><br><br>
+
+  <input id="customerAddress" type="text" placeholder="Хүргэлтийн хаяг"><br><br>
+
+  <button onclick="submitOrder()">Захиалга баталгаажуулах</button>
+</div>
+</div>
 <script>
+function showOrderForm() {
+  document.getElementById("orderForm").style.display = "block";
+}
+
+function submitOrder() {
+  const name = document.getElementById("customerName").value;
+  const phone = document.getElementById("customerPhone").value;
+  const address = document.getElementById("customerAddress").value;
+
+  if (!name || !phone || !address) {
+    alert("Нэр, утас, хаягаа бүрэн оруулна уу.");
+    return;
+  }
+
+  alert("Захиалга хүлээн авлаа. Баярлалаа!");
+}
 
   const images = {
 "Төмс": "https://commons.wikimedia.org/wiki/Special:Redirect/file/Potato.jpg",
