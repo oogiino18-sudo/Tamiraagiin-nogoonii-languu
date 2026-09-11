@@ -74,7 +74,7 @@
 };
 const cart = [];
 
-fetch("https://tamiraagiin-nogoonii-languu.onrender.com/products")
+fetch("/products")
   .then(res => res.json())
   .then(data => {
     const container = document.getElementById("products");
