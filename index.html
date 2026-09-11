@@ -107,13 +107,61 @@ fetch("/products")
   });
 
 function addToCart(name, price) {
-  cart.push({name, price});
+  const existing = cart.find(item => item.name === name);
 
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ name, price, qty: 1 });
+  }
+
+  renderCart();
+}
+
+function renderCart() {
   const list = document.getElementById("cartList");
-  const li = document.createElement("li");
-  li.textContent = name + " - " + price + "₮";
+  list.innerHTML = "";
 
-  list.appendChild(li);
+  let total = 0;
+
+  cart.forEach((item, index) => {
+    total += item.price * item.qty;
+
+    const li = document.createElement("li");
+
+    li.innerHTML = `
+      ${item.name} - ${item.price}₮ × ${item.qty}
+      <button onclick="decreaseCart(${index})">−</button>
+      <button onclick="increaseCart(${index})">+</button>
+      <button onclick="removeFromCart(${index})">Устгах</button>
+    `;
+
+    list.appendChild(li);
+  });
+
+  const totalLi = document.createElement("li");
+  totalLi.innerHTML = `<strong>Нийт: ${total}₮</strong>`;
+  list.appendChild(totalLi);
+}
+
+function increaseCart(index) {
+  cart[index].qty++;
+  renderCart();
+}
+
+function decreaseCart(index) {
+  cart[index].qty--;
+
+  if (cart[index].qty <= 0) {
+    cart.splice(index, 1);
+  }
+
+  renderCart();
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
+  renderCart();
 }
 
 </script>
